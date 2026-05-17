@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 3 & 4 — Test & Improve</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#000066;--gold:#FFC000;--purple:#6600FF;
+  --white:#F4F4F4;--card:#00004D;--card2:#000055;
+  --border:rgba(255,192,0,0.2);--border2:rgba(255,192,0,0.4);
+  --red:rgba(220,50,50,0.15);--red2:rgba(220,50,50,0.5);
+  --green:rgba(0,180,80,0.12);--green2:rgba(0,180,80,0.4);
+}
+body{font-family:'Inter',sans-serif;background:var(--navy);color:var(--white);padding:0 0 80px}
+
+.scroll-top{position:fixed;bottom:24px;right:24px;background:var(--gold);color:var(--navy);border:none;padding:10px 18px;border-radius:999px;font-weight:900;font-size:13px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.4);display:none;z-index:1000;transition:background .2s,transform .2s;letter-spacing:.04em}
+.scroll-top:hover{background:var(--purple);color:var(--white);transform:translateY(-3px)}
+
+.hero{text-align:center;padding:52px 24px 32px;background:linear-gradient(180deg,#000033,var(--navy))}
+.hero-tag{display:inline-block;background:var(--gold);color:var(--navy);font-size:11px;font-weight:900;letter-spacing:.15em;text-transform:uppercase;padding:4px 16px;border-radius:999px;margin-bottom:16px}
+.hero h1{font-size:clamp(26px,5vw,54px);font-weight:900;line-height:1.1;margin-bottom:10px}
+.gold{background:linear-gradient(90deg,var(--gold),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:14px;opacity:.7;max-width:560px;margin:0 auto;line-height:1.6}
+
+.week-divider{display:flex;align-items:center;gap:16px;padding:32px 24px 0;max-width:1080px;margin:0 auto}
+.week-label{background:var(--gold);color:var(--navy);font-size:11px;font-weight:900;letter-spacing:.15em;text-transform:uppercase;padding:5px 16px;border-radius:999px;white-space:nowrap}
+.week-line{flex:1;height:2px;background:linear-gradient(90deg,var(--gold),transparent)}
+
+.section{max-width:1080px;margin:0 auto;padding:0 24px}
+.sec-header{display:flex;align-items:center;gap:14px;margin:36px 0 20px}
+.sec-num{width:40px;height:40px;border-radius:50%;background:var(--gold);color:var(--navy);font-size:16px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec-title{font-size:clamp(16px,2.5vw,22px);font-weight:800}
+.sec-sub{font-size:12px;opacity:.6;margin-top:2px}
+
+/* CALLOUT BOXES */
+.callout{border-radius:12px;padding:20px 22px;margin-bottom:20px}
+.callout-red{background:var(--red);border:1.5px solid var(--red2)}
+.callout-gold{background:rgba(255,192,0,.08);border:1.5px solid var(--border2)}
+.callout-purple{background:rgba(102,0,255,.1);border:1.5px solid rgba(102,0,255,.35)}
+.callout-green{background:var(--green);border:1.5px solid var(--green2)}
+.callout-title{font-size:11px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;margin-bottom:7px}
+.callout-body{font-size:13px;line-height:1.65;opacity:.85}
+.callout-body b{color:var(--gold)}
+
+/* TESTING MODES */
+.mode-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:24px}
+.mode-card{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:18px;transition:transform .2s,border-color .2s}
+.mode-card:hover{transform:translateY(-3px);border-color:var(--gold)}
+.mode-icon{font-size:24px;margin-bottom:8px}
+.mode-name{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.mode-desc{font-size:12px;line-height:1.6;opacity:.8;margin-bottom:10px}
+.mode-list{list-style:none;display:flex;flex-direction:column;gap:4px}
+.mode-list li{font-size:11px;opacity:.75;padding-left:14px;position:relative;line-height:1.5}
+.mode-list li::before{content:'›';position:absolute;left:0;color:var(--gold);font-weight:700}
+
+/* ISSUES GRID */
+.issues-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:24px}
+.issue-card{background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:14px;transition:border-color .2s}
+.issue-card:hover{border-color:rgba(220,50,50,.5)}
+.issue-icon{font-size:20px;margin-bottom:6px}
+.issue-name{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#FF9090;margin-bottom:4px}
+.issue-desc{font-size:11px;line-height:1.5;opacity:.7}
+
+/* EXCEL TABLE */
+.excel-preview{background:#000033;border:1.5px solid var(--border2);border-radius:10px;overflow:hidden;margin-bottom:16px}
+.excel-tab{display:flex;border-bottom:1px solid var(--border2)}
+.excel-tab-item{padding:8px 16px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:default}
+.excel-tab-item.active{background:rgba(255,192,0,.15);color:var(--gold);border-bottom:2px solid var(--gold)}
+.excel-tab-item.inactive{opacity:.4}
+.excel-cols{display:grid;padding:12px 14px;gap:4px}
+.excel-col{display:flex;align-items:baseline;gap:8px;font-size:12px}
+.col-name{color:var(--gold);font-weight:700;min-width:120px}
+.col-type{opacity:.5;font-size:10px;font-style:italic}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;gap:0}
+.step-row{display:grid;grid-template-columns:50px 1fr;gap:0;align-items:stretch}
+.step-line{display:flex;flex-direction:column;align-items:center}
+.step-circle{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;flex-shrink:0;border:2px solid var(--gold);background:var(--card);color:var(--gold);transition:background .2s,color .2s}
+.step-row:hover .step-circle{background:var(--gold);color:var(--navy)}
+.step-circle.highlight{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.step-circle.gate{background:rgba(102,0,255,.3);border-color:var(--purple);color:#C8A8FF}
+.step-connector{width:2px;flex:1;background:linear-gradient(180deg,var(--gold),rgba(255,192,0,.12));margin:3px 0}
+.step-last .step-connector{display:none}
+.step-body{padding:0 0 28px 16px}
+.step-tag{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:3px;margin-bottom:4px;margin-top:10px}
+.tag-action{background:rgba(255,192,0,.15);color:var(--gold)}
+.tag-bot{background:rgba(102,0,255,.2);color:#C8A8FF}
+.tag-gate{background:rgba(0,180,80,.15);color:#60E0A0}
+.step-name{font-size:13px;font-weight:800;margin-bottom:5px;line-height:1.3}
+.step-desc{font-size:12px;opacity:.75;line-height:1.65;padding:7px 11px;background:rgba(255,255,255,.04);border-left:2px solid rgba(255,192,0,.25);border-radius:0 5px 5px 0;margin-bottom:8px}
+.step-note{font-size:11px;background:rgba(102,0,255,.1);border-left:2px solid rgba(102,0,255,.4);padding:7px 11px;border-radius:0 5px 5px 0;opacity:.85;line-height:1.5;margin-bottom:8px}
+
+/* PROMPT */
+.prompt-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:7px;display:flex;align-items:center;gap:5px;margin-top:10px}
+.prompt-box{background:#000022;border:1px solid var(--border2);border-radius:7px;padding:16px;font-family:'Courier New',monospace;font-size:13px;line-height:1.8;color:#C8C8E8;white-space:pre-wrap;position:relative}
+.copy-btn{position:absolute;top:8px;right:8px;background:rgba(255,192,0,.12);border:1px solid rgba(255,192,0,.3);color:var(--gold);font-size:9px;font-weight:700;padding:3px 9px;border-radius:3px;cursor:pointer;letter-spacing:.05em;text-transform:uppercase;transition:background .2s}
+.copy-btn:hover{background:var(--gold);color:var(--navy)}
+
+.divider-line{height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);margin:24px 0}
+.footer{text-align:center;padding:32px 24px 16px;opacity:.3;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">AI-TEC Sprint Program</div>
+  <h1>Week 3 & 4 — <span class="gold">Test & Improve</span></h1>
+  <p>Week 3: test with a mindset, not a script. Week 4: diagnose, operate, validate.</p>
+</div>
+
+<!-- ═══════════════════════ WEEK 3 ═══════════════════════ -->
+<div class="week-divider">
+  <div class="week-label">Week 3 — Test</div>
+  <div class="week-line"></div>
+</div>
+
+<!-- KNOW YOUR BOT -->
+<div class="section">
+  <div class="sec-header">
+    <div class="sec-num">①</div>
+    <div><div class="sec-title">Know Your Bot First</div><div class="sec-sub">Answer both before testing anything</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px">
+    <div class="callout callout-gold">
+      <div class="callout-title" style="color:var(--gold)">What does this bot do?</div>
+      <div class="callout-body">One sentence. If you can't describe it in one sentence, the End Game was never defined. Go back to Week 2 Step 2.</div>
+    </div>
+    <div class="callout callout-gold">
+      <div class="callout-title" style="color:var(--gold)">What does a perfect output look like?</div>
+      <div class="callout-body">One concrete example. This is your validation benchmark. Every test result is measured against this.</div>
+    </div>
+  </div>
+
+  <!-- ANTI-SCRIPT CALLOUT -->
+  <div class="callout callout-red" style="margin-bottom:24px">
+    <div class="callout-title" style="color:#FF9090">⚠ Do Not Write a Test Script</div>
+    <div class="callout-body">A controlled step-by-step test plan — <i>"Step 1 do this, expect this. Step 2 do that, expect that"</i> — tells users exactly what to do. <b>This creates tunnel vision.</b> The bot passes your test and fails real users. Real users don't follow your plan. They ask unexpected questions, give incomplete inputs, and push boundaries you never anticipated. <b>Give testers a mindset, not a script.</b> A resilient bot survives creative destruction — not a rehearsed walkthrough.</div>
+  </div>
+</div>
+
+<!-- TESTING MODES -->
+<div class="section">
+  <div class="sec-header">
+    <div class="sec-num">②</div>
+    <div><div class="sec-title">Three Testing Modes</div><div class="sec-sub">Run all three — in any order — with real work examples</div></div>
+  </div>
+  <div class="mode-grid">
+    <div class="mode-card">
+      <div class="mode-icon">✅</div>
+      <div class="mode-name">Happy Path</div>
+      <div class="mode-desc">Does it do what it's supposed to do? Test with standard, clean inputs matching the intended use case.</div>
+      <ul class="mode-list">
+        <li>Use real work data — not hypothetical scenarios</li>
+        <li>Test the same input 2-3 times — check consistency</li>
+        <li>Vary the phrasing — same meaning, different words</li>
+      </ul>
+    </div>
+    <div class="mode-card">
+      <div class="mode-icon">⚠️</div>
+      <div class="mode-name">Edge Cases</div>
+      <div class="mode-desc">What happens at the boundaries? Test with incomplete, unusual, or ambiguous inputs.</div>
+      <ul class="mode-list">
+        <li>Incomplete data — missing fields, partial information</li>
+        <li>Ambiguous requests — unclear intent</li>
+        <li>Unusual formats — data structured differently than expected</li>
+        <li>Overload — too much information at once</li>
+      </ul>
+    </div>
+    <div class="mode-card" style="border-color:rgba(220,50,50,.3)">
+      <div class="mode-icon">💥</div>
+      <div class="mode-name">Creative Destruction</div>
+      <div class="mode-desc">Try to break the logic. Hard. A bot that survives creative destruction is a resilient bot.</div>
+      <ul class="mode-list">
+        <li>Tell it you are a different type of user than intended</li>
+        <li>Give it contradictory information — which does it trust?</li>
+        <li>Ask something slightly outside scope — does it hold the boundary?</li>
+        <li>Give it the absolute minimum input — what does it do with almost nothing?</li>
+        <li>Push it to make something up — does it resist or comply?</li>
+        <li>Role-reverse — ask the bot to explain your job back to you</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 6 ISSUES -->
+<div class="section">
+  <div class="sec-header">
+    <div class="sec-num">③</div>
+    <div><div class="sec-title">6 Issues to Watch For</div><div class="sec-sub">Log these in Tab 2 of your Excel — document exact examples</div></div>
+  </div>
+  <div class="issues-grid">
+    <div class="issue-card">
+      <div class="issue-icon">🔄</div>
+      <div class="issue-name">Looping</div>
+      <div class="issue-desc">Repeating similar responses or going in circles without resolving the request</div>
+    </div>
+    <div class="issue-card">
+      <div class="issue-icon">🤥</div>
+      <div class="issue-name">Hallucination</div>
+      <div class="issue-desc">Inventing facts, data, or references that don't exist in the source material</div>
+    </div>
+    <div class="issue-card">
+      <div class="issue-icon">🌀</div>
+      <div class="issue-name">Content Drift</div>
+      <div class="issue-desc">Output becomes irrelevant, off-topic, or nonsensical as the conversation progresses</div>
+    </div>
+    <div class="issue-card">
+      <div class="issue-icon">📚</div>
+      <div class="issue-name">Excessive Output</div>
+      <div class="issue-desc">Provides far more information than needed — overwhelming the user instead of helping</div>
+    </div>
+    <div class="issue-card">
+      <div class="issue-icon">🎲</div>
+      <div class="issue-name">Consistency Issues</div>
+      <div class="issue-desc">Same input produces different outputs each time — unpredictable behavior</div>
+    </div>
+    <div class="issue-card">
+      <div class="issue-icon">🔒</div>
+      <div class="issue-name">Data Privacy</div>
+      <div class="issue-desc">Provides or requests confidential information — client names, financial data, personal details</div>
+    </div>
+  </div>
+</div>
+
+<!-- EXCEL STRUCTURE -->
+<div class="section">
+  <div class="sec-header">
+    <div class="sec-num">④</div>
+    <div><div class="sec-title">Log Everything in the Shared Excel</div><div class="sec-sub">Multiple testers, one file — this becomes the Week 4 input</div></div>
+  </div>
+  <div class="excel-preview">
+    <div class="excel-tab">
+      <div class="excel-tab-item active">Tab 1 — Tester Feedback</div>
+      <div class="excel-tab-item inactive">Tab 2 — Issues Flagged</div>
+    </div>
+    <div class="excel-cols" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+      <div class="excel-col"><span class="col-name">Tester</span><span class="col-type">Your name</span></div>
+      <div class="excel-col"><span class="col-name">Bot Version</span><span class="col-type">Version number tested</span></div>
+      <div class="excel-col"><span class="col-name">Like / Dislike</span><span class="col-type">One word</span></div>
+      <div class="excel-col"><span class="col-name">Why</span><span class="col-type">Explain your rating</span></div>
+      <div class="excel-col"><span class="col-name">Examples</span><span class="col-type">Paste the actual input/output</span></div>
+      <div class="excel-col"><span class="col-name">Comments</span><span class="col-type">How it should behave — blank if unknown</span></div>
+    </div>
+  </div>
+  <div class="callout callout-purple">
+    <div class="callout-title" style="color:#C8A8FF">The Examples column is the most important</div>
+    <div class="callout-body">Paste the actual input you gave and the actual output you received. A comment without an example is an opinion. An example without a comment is data. Both together is a diagnosis.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ WEEK 4 ═══════════════════════ -->
+<div class="week-divider" style="margin-top:48px">
+  <div class="week-label" style="background:var(--purple)">Week 4 — Live Brain Surgery</div>
+  <div class="week-line"></div>
+</div>
+
+<div class="section">
+  <div class="sec-header">
+    <div class="sec-num" style="background:var(--purple)">⑤</div>
+    <div><div class="sec-title">Live Brain Surgery — 10 Steps</div><div class="sec-sub">Week 3 results are the input. A fully revised, validated prompt is the output.</div></div>
+  </div>
+
+  <div class="callout callout-purple" style="margin-bottom:28px">
+    <div class="callout-title" style="color:#C8A8FF">Why Live Brain Surgery?</div>
+    <div class="callout-body">After Week 3 testing, the bot exists and has real SME feedback. Live Brain Surgery addresses the most realistic scenario: the bot works, but specific behaviors are wrong. We don't rebuild. We operate. The Week 3 Excel is the patient chart. The prompt is the patient.</div>
+  </div>
+
+  <div class="steps">
+
+    <!-- STEP 1 -->
+    <div class="step-row">
+      <div class="step-line"><div class="step-circle">1</div><div class="step-connector"></div></div>
+      <div class="step-body">
+        <div class="step-tag tag-action">You</div>
+        <div class="step-name">Upload the Week 3 Excel</div>
+        <div class="step-desc">Upload the completed Excel file from Week 3 testing. All tester feedback — Tab 1 and Tab 2 — must be present before the session begins.</div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-row">
+      <div class="step-line"><div class="step-circle">2</div><div class="step-connector"></div></div>
+      <div class="step-body">
+        <div class="step-tag tag-action">You</div>
+        <div class="step-name">Tell the Assistant What the Excel Contains</div>
+        <div class="step-desc">Describe the file structure before asking for any analysis. The AI reads what you tell it to expect — not what it assumes.</div>
+        <div class="prompt-label">💬 Example</div>
+        <div class="prompt-box"><button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.innerText)">Copy</button><span>I am attaching the Week 3 test results.
+Tab 1 — Tester Feedback contains:
+Tester | Bot Version | Like/Dislike | Why | Examples | Comments
+
+Tab 2 — Issues Flagged contains:
+Looping | Hallucination | Content Drift | 
+Excessive Output | Consistency | Data Privacy
+
+Each row = one issue. Examples column 
+contains the actual inputs and outputs they tested.</span></div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step-row">
+      <div class="step-line"><div class="step-circle">3</div><div class="step-connector"></div></div>
+      <div class="step-body">
+        <div class="step-tag tag-bot">Bot</div>
+        <div class="step-name">Review, Understand, and Generate a Summary</div>
+        <div class="step-desc">The AI reads the full Excel — all testers, both tabs. Focus is on dislike items. Some testers have requested a specific fix — these are flagged separately. The summary shows the full failure picture before any diagnosis begins.</div>
+        <div class="prompt-label">💬 Instruction</div>
+        <div class="prompt-box"><button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.innerText)">Copy</button><span>Review the full Excel. Focus on the Dislike items 
+and all flagged issues in Tab 2.
+
+Generate a summary:
+1. Most common failure patterns across testers
+2. Items where a specific fix was requested 
+   (flag these separately — they are priority)
+3. Items with no stated fix (AI will diagnose)
+4. Any privacy or data concerns flagged
+
+Do not diagnose yet. Summarize only.</span></div>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step-row">
+      <div class="step-line"><div class="step-circle highlight">4</div><div class="step-connector"></div></div>
+      <div class="step-body">
+        <div class="step-tag tag-bot">Bot</div>
+        <div class="step-name">Diagnose — Find All Prompt Sections That Caused the Issue</div>
+        <div class="step-desc">The AI maps each failure to its source in the current system prompt. This step requires precision — the same issue can appear across multiple prompt layers simultaneously.</div>
+        <div class="step-note">⚠ <b>Layering check is mandatory.</b> The same problematic instruction may appear in the role definition, output format, AND constraints section. Fixing one occurrence while leaving others means the unfixed sections override the fix. The AI must identify ALL occurrences before proposing any solution.</div>
+        <div class="prompt-label">💬 Instruction</div>
+        <div class="prompt-box"><button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.innerText)">Copy</button><span>Using the summary from Step 3 and the current 
+system prompt below, diagnose each failure.
+
+For each issue:
+1. Extract the exact prompt section(s) that caused it
+2. Explain WHY that section produces this behavior
+3. CHECK FOR LAYERING — does the same context 
+   appear in multiple sections? List every occurrence.
+   Fixing one while others remain will not resolve the issue.
+4. If testers requested a specific fix, note it.
+   If not, suggest 2 fix approaches.
+
+Do not make any changes yet.
+Present the full diagnosis for my review.
+
+Current system prompt:
+[paste full current prompt here]</span></div>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step-row">
+      <div class="step-line"><div class="step-circle gate">5</div><div class="step-connector"></div></div>
+      <div class="step-body">
+        <div class="step-tag tag-gate">Confirm</div>
+        <div class="step-name">Confirm the Plan — Then Instruct the Revision</div>
+        <div class="step-desc">Review the diagnosis. Confirm you agree with what was found and which fix approach to apply. Nothing is changed until you explicitly instruct it. Once confirmed, tell the assistant to revise and display the full prompt.</div>
+        <div class="prompt-label">💬 Instruction (after reviewing diagnosis)</div>
+        <div class="prompt-box"><button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.innerText)">Copy</button><span>Confirmed. Apply the following fixes:
+- [Issue 1]: use [approach A / testers' requested fix]
+- [Issue 2]: use [approach B]
+
+Revise the prompt accordingly.
+Display the COMPLETE revised prompt in full.
+Do not show partial sections — full prompt only.
+I will copy and paste from your output.</span></div>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="step-row">
+      <div class="step-line"><div class="step-circle">6</div><div class="step-connector"></div></div>
+      <div class="step-body">
+        <div class="step-tag tag-bot">Bot</div>
+        <div class="step-name">Bot Generates the Full Revised Prompt</div>
+        <div class="step-desc">The AI produces the complete revised system prompt with all confirmed fixes applied across all identified layers. The output is copy-paste ready — no assembly required.</div>
+      </div>
+    </div>
+
+    <!-- STEP 7 -->
+    <div class="step-row">
+      <div class="step-line"><div class="step-circle">7</div><div class="step-connector"></div></div>
+      <div class="step-body">
+        <div class="step-tag tag-action">You</div>
+        <div class="step-name">Tell the Bot to Simulate</div>
+        <div class="step-desc">Before transplanting anything into the live bot, run simulations using the revised prompt. Use the actual failing examples from the Week 3 Excel — not invented test cases.</div>
+        <div class="prompt-label">💬 Instruction</div>
+        <div class="prompt-box"><button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.innerText)">Copy</button><span>Using the revised prompt you just generated,
+simulate 3 test scenarios.
+
+Pull the actual failing inputs from the Week 3 Excel
+as your test inputs. Do not invent new scenarios.
+
+For each simulation:
+Input used →
+Expected output →
+Simulated output →
+Assessment: RESOLVED / PARTIALLY RESOLVED / STILL FAILING
+
+Flag any remaining gaps after simulation.</span></div>
+      </div>
+    </div>
+
+    <!-- STEP 8 -->
+    <div class="step-row">
+      <div class="step-line"><div class="step-circle gate">8</div><div class="step-connector"></div></div>
+      <div class="step-body">
+        <div class="step-tag tag-gate">Confirm</div>
+        <div class="step-name">Confirm the Simulation Is Working</div>
+        <div class="step-desc">Review the simulation results. If all critical issues show RESOLVED — proceed to transplant. If any remain STILL FAILING — loop back to Step 4 with the new information. Do not transplant a prompt that hasn't passed simulation.</div>
+        <div class="step-note">If simulation reveals new failures not in the original diagnosis — this is new data. Add it to the Excel before looping back.</div>
+      </div>
+    </div>
+
+    <!-- STEP 9 -->
+    <div class="step-row">
+      <div class="step-line"><div class="step-circle highlight">9</div><div class="step-connector"></div></div>
+      <div class="step-body">
+        <div class="step-tag tag-action">You</div>
+        <div class="step-name">Transplant — Copy the Full Revised Prompt Into the Live Bot</div>
+        <div class="step-desc">Copy the full revised prompt from Step 6. Replace the entire current system prompt in the live bot. Do not merge sections — full replacement only. Partial transplants leave old instructions in place and create new conflicts.</div>
+        <div class="step-note">⚠ Full replacement. Not a partial merge. Leaving any original section in place risks reintroducing the exact behavior you just fixed.</div>
+      </div>
+    </div>
+
+    <!-- STEP 10 -->
+    <div class="step-row step-last">
+      <div class="step-line"><div class="step-circle highlight" style="background:var(--green2);border-color:#00B850;color:#fff">10</div><div class="step-connector"></div></div>
+      <div class="step-body">
+        <div class="step-tag" style="background:var(--green);color:#60E0A0">Live</div>
+        <div class="step-name">Test the Live Bot</div>
+        <div class="step-desc">Run the same scenarios from Week 3 against the live transplanted bot — not the simulation. Simulation validates the prompt logic. Live testing validates the transplant was successful and no configuration issues were introduced.</div>
+        <div class="callout callout-green" style="margin-top:10px">
+          <div class="callout-body" style="color:#60E0A0">If the live bot passes — surgery complete. Document the final prompt version and results in the Excel. This becomes the baseline for future iterations.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer">Week 3 & 4 — Test & Improve · AI-TEC Sprint Program · Brenda Li · 2026</div>
+
+<button class="scroll-top" id="st" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Top</button>
+<script>window.addEventListener('scroll',()=>{document.getElementById('st').style.display=window.scrollY>300?'block':'none'})</script>
+
+</body>
+</html>
